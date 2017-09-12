@@ -1,7 +1,7 @@
 function outfile = readData(filename)
 
 % global variables
-global DBCSet HFCSet NBCSet IC TS MAT
+global DBCSet HFCSet NBCSet TS MAT
 
 % Open file
 fileID = fopen(filename,'r');
@@ -153,15 +153,19 @@ end
 for i=1:2
     fgetl(fileID);
 end
-IC = cell(1,2);
+IC = cell(1,2); % initialize
 tline = fgetl(fileID);
 tmp = strsplit(tline);
 name = tmp{2};
-% next line
-tline = fgetl(fileID);
-tmp = strsplit(tline);
-value = str2double(tmp(2)); % value to assign
-IC(:) = {name, value};
+if strcmp(name,'Constant')
+    % next line
+    tline = fgetl(fileID);
+    tmp = strsplit(tline);
+    value = str2double(tmp(2)); % value to assign
+    IC(:) = {name, value};
+else
+    error('Function name must be Constant');
+end
 
 for i=1:2
     fgetl(fileID);
@@ -178,10 +182,20 @@ ft = str2double(tmp(3)); % value to assign
 tline = fgetl(fileID);
 tmp = strsplit(tline);
 name = tmp{2}; % value to assign
+if strcmp(name,'Trapezoidal')
+    alpha = 0.5;
+elseif strcmp(name,'Backward')
+    alpha = 1.0;
+elseif strcmp(name,'Forward')
+    alpha = 0.0;
+else
+    warning('Using Trapezoidal rule!')
+    alpha = 0.5;
+end
 tline = fgetl(fileID);
 tmp = strsplit(tline);
 nst = str2double(tmp(4)); % value to assign
-TS(:) = {dt, ft, name, nst};
+TS(:) = {dt, ft, alpha, nst};
 
 % Read material properties
 % get next line and discard it
@@ -224,6 +238,8 @@ readMesh(mshfile)
 % parse data
 parseData(nodeSet, sideSet);
 
+% Initialize data
+initialCondition(IC)
 
 % % ====================
 % % Open file msh file

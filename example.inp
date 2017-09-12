@@ -1,0 +1,35 @@
+PROBLEM NAME: Elasticity 2D
+
+DISCRETIZATION
+Mesh Input File: C:\Users\marioju\Documents\MATLAB\cylinder.msh
+Output Filename: C:\Users\marioju\Documents\MATLAB\
+Material Set Association: 1
+1 mat1
+Side Set Association: 1
+2 convLoad
+Node Set Association: 0
+4 pointLoad
+Temperature BCs: 0
+DBC on NS bottom for DOF T: 0.0
+Convection BCs: 1
+NBC on SS convLoad for convection: 525.0 50.0
+Heat Flux BCs: 0
+HFC on NS pointLoad for heatflux: 1.0
+
+INITIAL CONDITION
+Function: Constant
+Temperature: 200.0
+
+TIME STEPPING
+Delta Time: 1.0
+Final time: 60.0
+Method: Trapezoidal rule
+Output each n-steps: 5
+
+MATERIAL PROPERTIES 1
+Name: mat1
+Density: 2707.0
+Heat capacity: 896.0
+Conductivity: 215.0
+
+

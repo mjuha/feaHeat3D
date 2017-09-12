@@ -1,12 +1,13 @@
-function [fe,ke] = weakform(el,xe,de,matNum)
+function [fe,me] = weakform(el,xe,de,matNum)
 
 global convectionLoad MAT TS
+
+dt = TS{1};
+alpha = TS{3};
 
 % 1 point formula - degree of precision 1
 gp =  [ 1/4, 1/4, 1/4;];
 w = 1/6;
-
-ngp = size(gp,1);
 
 % get material properties
 prop = cell2mat(MAT(matNum));
@@ -14,18 +15,16 @@ rho = prop(1); % density
 cp = prop(2); % heat capacity
 k = prop(3); % conductivity
 
-% initialize stiffness matrix
-ke = zeros(4,4);
 % stress-strain displacement matrix
 B = zeros(3,4);
 % loop over gauss points
-for i=1:ngp
-    [shp,dN,jac] = shape(gp(i,:),xe);
-    for j=1:4 % loop over local nodes
-        B(:,j) = dN(j,:);
-    end
-    ke = ke + B'*D*B*w(i)*jac;
+[N,dN,jac] = shape(gp,xe);
+for j=1:4 % loop over local nodes
+    B(:,j) = dN(j,:);
 end
+ke = B' * k * B * w * jac;
+%
+me = N' * (rho*cp) * N * w * jac;
 
 fe = zeros(4,1);
 if size(convectionLoad,1) > 0
@@ -35,11 +34,15 @@ if size(convectionLoad,1) > 0
     if flag > 0
         faces = size(index,1);
         for i=1:faces
-            [fe1] = computeSideLoad(index(i),xe);
+            [ke1,fe1] = computeSideLoad(index(i),xe);
             fe = fe1;
+            ke = ke + ke1;
         end
     end
 end
-fe = fe - ke * ue;
+
+fe = fe - ke * de;
+%
+me = me + alpha*dt*ke;
 
 end

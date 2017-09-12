@@ -24,7 +24,7 @@ function WriteVTKFile( outfiledest,istep  )
 %
 % =====================================================================
 
-global coordinates elements nn nel U MAT
+global coordinates elements nn nel U
 
 if istep < 10
     % file name
@@ -59,11 +59,12 @@ fprintf(fid, '%s %d\n','CELL_TYPES ', nel);
 for i=1:nel
     fprintf(fid, '%d\n', 10);
 end
-% fprintf(fid, '%s %d\n', 'POINT_DATA ', nn);
-% fprintf(fid, 'VECTORS U float\n');
-% for i=1:nn
-%     fprintf(fid, '%g %g %g\n',U(1,i),U(2,i),0.0);
-% end
+fprintf(fid, '%s %d\n', 'POINT_DATA ', nn);
+fprintf(fid, 'SCALARS T float 1\n');
+fprintf(fid, 'LOOKUP_TABLE default\n');
+for i=1:nn
+    fprintf(fid, '%g\n',U(1,i));
+end
 % fprintf(fid, '%s %d\n', 'CELL_DATA ', nel);
 % fprintf(fid, 'TENSORS Stress float\n');
 % %fprintf(fid, 'LOOKUP_TABLE default\n');
