@@ -1,8 +1,6 @@
-function [fe] = computeSideLoad(el,xe)
+function [ke,fe] = computeSideLoad(el,xe)
 
 global convectionLoad
-
-fe = zeros(4,1);
 
 % Gauss - Legendre rule
 gp = [1/3, 1/3];
@@ -70,6 +68,6 @@ if jac < 1.0e-14
     error('Negative jacobian, element too distorted!');
 end
 
-fe = fe + Nshape' * (h*Ta) * w * jac;
-
+fe = Nshape' * (h*Ta) * w * jac;
+ke = Nshape' * h * Nshape * w * jac;
 end
