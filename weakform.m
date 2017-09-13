@@ -1,6 +1,6 @@
 function [fe,me] = weakform(el,xe,de,matNum)
 
-global convectionLoad MAT TS
+global convectionLoad MAT TS fluxLoad
 
 dt = TS{1};
 alpha = TS{3};
@@ -34,9 +34,23 @@ if size(convectionLoad,1) > 0
     if flag > 0
         faces = size(index,1);
         for i=1:faces
-            [ke1,fe1] = computeSideLoad(index(i),xe);
+            [ke1,fe1] = computeSideLoad(index(i),xe,false);
             fe = fe1;
             ke = ke + ke1;
+        end
+    end
+end
+
+% now flux load
+if size(fluxLoad,1) > 0
+    index = find(fluxLoad(:,1)==el,4); % up to four faces
+    flag = size(index,1);
+    % compute side load
+    if flag > 0
+        faces = size(index,1);
+        for i=1:faces
+            [~,fe1] = computeSideLoad(index(i),xe,true);
+            fe = fe + fe1;
         end
     end
 end

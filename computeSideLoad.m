@@ -1,15 +1,21 @@
-function [ke,fe] = computeSideLoad(el,xe)
+function [ke,fe] = computeSideLoad(el,xe,isFluxLoad)
 
-global convectionLoad
+global convectionLoad fluxLoad
 
 % Gauss - Legendre rule
 gp = [1/3, 1/3];
 w = 1.0;
 
 % compute residual: side loads
-face = convectionLoad(el,2);
-h = convectionLoad(el,6); % coefficient
-Ta = convectionLoad(el,7); % ambient temperature
+if ~isFluxLoad
+    face = convectionLoad(el,2);
+    h = convectionLoad(el,6); % coefficient
+    Ta = convectionLoad(el,7); % ambient temperature
+else
+    face = fluxLoad(el,2);
+    q = fluxLoad(el,6); % heat flux
+end
+
 
 % loop over gauss points
 % below we are going to use the same interchangably r,s and t.
@@ -69,7 +75,12 @@ if jac < 1.0e-14
     error('Negative jacobian, element too distorted!');
 end
 
-fe = Nshape' * (h*Ta) * w * jac;
-ke = Nshape' * h * Nshape * w * jac;
+if ~isFluxLoad
+    fe = Nshape' * (h*Ta) * w * jac;
+    ke = Nshape' * h * Nshape * w * jac;
+else
+    fe = Nshape' * q * w * jac;
+    ke = zeros(4,4);
+end
 
 end
