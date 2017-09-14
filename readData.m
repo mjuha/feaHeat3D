@@ -1,7 +1,7 @@
 function outfile = readData(filename)
 
 % global variables
-global DBCSet HFCSet NBCSet TS MAT
+global DBCSet HFCSet NBCSet TS MAT isTimeDBC nodeSet
 
 % Open file
 fileID = fopen(filename,'r');
@@ -97,12 +97,23 @@ else
         tline = fgetl(fileID);
         tmp = strsplit(tline);
         name = tmp{4};
-        dof = sscanf(tmp{7},'%[T]');
-        value = str2double(tmp(8)); % value to assign
+        dof = sscanf(tmp{7},'%[TFunction]');
         if strcmp(dof,'T')
+            value = str2double(tmp(8)); % value to assign
             DBCSet(i,:) = {name, 'T' ,value};
+            isTimeDBC = false;
+        elseif strcmp(dof,'TFunction')
+            f = tmp{8};            
+            if strcmp(f,'Linear')
+                val = 1;
+            else
+                error('Function must be Linear');
+            end
+            value = [ val, str2double(tmp(9)), str2double(tmp(10)) ];
+            DBCSet(i,:) = {name, 'TFunction' ,value};
+            isTimeDBC = true;
         else
-            error('DOF must be T, please check')
+            error('DOF must be T or TFunction, please check')
         end
     end
 end
@@ -235,11 +246,11 @@ fclose(fileID);
 % read mesh
 readMesh(mshfile)
 
-% parse data
-parseData(nodeSet, sideSet);
-
 % Initialize data
 initialCondition(IC)
+
+% parse data
+parseData(nodeSet, sideSet);
 
 % % ====================
 % % Open file msh file

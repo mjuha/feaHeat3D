@@ -1,0 +1,35 @@
+PROBLEM NAME: Heat3D
+
+DISCRETIZATION
+Mesh Input File: C:\Users\marioju\Documents\MATLAB\vm33.msh
+Output Filename: C:\Users\marioju\Documents\MATLAB\
+Material Set Association: 1
+4 mat1
+Side Set Association: 1
+2 zeroFlux
+Node Set Association: 1
+1 outter
+Temperature BCs: 1
+DBC on NS outter for DOF TFunction: Linear 70.0 500.0
+Convection BCs: 0
+NBC on SS convLoad for convection: 525.0 70.0
+Heat Flux BCs: 0
+HFC on NS pointLoad for heatflux: 1.0
+
+INITIAL CONDITION
+Function: Constant
+Temperature: 70.0
+
+TIME STEPPING
+Delta Time: 1.0
+Final time: 430.0
+Method: Trapezoidal rule
+Output each n-steps: 10
+
+MATERIAL PROPERTIES 1
+Name: mat1
+Density: 0.284
+Heat capacity: 0.10
+Conductivity: 0.000625
+
+

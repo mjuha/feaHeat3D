@@ -12,9 +12,6 @@ global DBCSet HFCSet NBCSet
 ID = ones(1,nn);
 %================
 
-% solution vector
-U = zeros(2,nn);
-
 [m,~] = size(triNode);
 numericCell = nodeSet(:,1);
 numericVector = cell2mat(numericCell);
@@ -33,9 +30,17 @@ for i=1:m
     [row,~] = find(strcmp(DBCSet,name),3);
     found = false;
     for j=1:length(row)
-        value = DBCSet{row(j),3};
-        ID(triNode(i,:)) = 0; % T
-        U(1,triNode(i,:)) = value;       
+        dof = DBCSet{row(j),2};
+        if strcmp(dof,'T')
+            value = DBCSet{row(j),3};
+            U(1,triNode(i,2:4)) = value;       
+        elseif strcmp(dof,'TFunction')
+            value = DBCSet{row(j),3};
+            U(1,triNode(i,2:4)) = value(2);       
+        else
+            error('Unknown dof!')
+        end
+        ID(triNode(i,2:4)) = 0; % T
         found = true;
     end
     if found

@@ -2,6 +2,9 @@ function initialCondition(IC)
 
 global U nn
 
+% solution vector
+U = zeros(2,nn);
+
 name = IC{1};
 
 if strcmp(name,'Constant')

@@ -11,10 +11,10 @@
 % Clear variables from workspace
 clearvars
 
-global nel neq nzmax coordinates U elements nn LM irow icol ID TS
+global nel neq nzmax coordinates U elements nn LM irow icol ID TS isTimeDBC
 
 % Specify file name
-filename = '\\Client\C$\Users\marioju\Documents\Work\feaTransientHeat3D\example.inp';
+filename = '\\Client\C$\Users\marioju\Documents\Work\VM33\example.inp';
 
 % read data
 fprintf('************************\n')
@@ -93,6 +93,9 @@ while ( t <= tf )
     F = zeros(neq,1);
     % set counter to zero
     count = 0;
+    if isTimeDBC
+        DBC_InTime(t)
+    end
     % predictor value
     dp = U(1,:) + (1-alpha)*dt*U(2,:);
     for i=1:nel
