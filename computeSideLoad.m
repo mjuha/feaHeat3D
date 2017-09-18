@@ -35,7 +35,7 @@ elseif face == 2 % local nodes 1-2-4
     Nshape = [ 1-r-s, r, 0, s ];
     N_r = [ -1 ,1, 0, 0 ];
     % N_s = [0, 0, 0, 0];
-    N_s = [ -1 ,1, 0, 1 ];
+    N_s = [ -1 ,0, 0, 1 ];
 elseif face == 3 % local nodes 1-3-4
     % r = 0
     r = gp(1);
