@@ -113,6 +113,9 @@ end
 
 % find element where convection is applied
 [m,~] = size(convectionLoad);
+if m > 0
+    fprintf('\nFinding elements where convection is applied...\n');
+end
 for i=1:m
     A = convectionLoad(i,3:5);
     for j=1:nel
@@ -125,6 +128,9 @@ for i=1:m
     end
 end
 % find face where convection is applied
+if m > 0
+    fprintf('\nFinding faces where convection is applied...\n');
+end
 for i=1:m
     A = convectionLoad(i,3:5);
     j = convectionLoad(i,1);
@@ -175,6 +181,9 @@ end
 
 % find element where flux is applied
 [m,~] = size(fluxLoad);
+if m > 0
+    fprintf('\nFinding elements where heat flux is applied...\n');
+end
 for i=1:m
     A = fluxLoad(i,3:5);
     for j=1:nel
@@ -187,6 +196,9 @@ for i=1:m
     end
 end
 % find face where flux is applied
+if m > 0
+    fprintf('\nFinding faces where heat flux is applied...\n');
+end
 for i=1:m
     A = fluxLoad(i,3:5);
     j = fluxLoad(i,1);
