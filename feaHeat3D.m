@@ -1,3 +1,4 @@
+function feaHeat3D(filename,varargin)
 % feaHeat3D.m
 % This is the main file that implement a tetrahedra
 % element for solving transient heat transfer problems
@@ -14,7 +15,16 @@ clearvars
 global nel neq nzmax coordinates U elements nn LM irow icol ID TS isTimeDBC
 
 % Specify file name
-filename = '\\Client\C$\Users\marioju\Documents\Work\VM33\example.inp';
+%filename = '\\Client\C$\Users\marioju\Documents\Work\valvula\example.inp';
+
+% check if user have specified rregression tests
+if nargin > 1
+    error('Only accept filename!')
+%     % extract the regression values
+%     normDisp = varargin{1};
+%     normRot = varargin{2};
+%     regressionTol = varargin{3};
+end
 
 % read data
 fprintf('************************\n')
@@ -143,3 +153,4 @@ end
 % computeStressStrain
 % 
 % WriteVTKFile(outfile,1)
+end
